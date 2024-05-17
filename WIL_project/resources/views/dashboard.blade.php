@@ -9,7 +9,16 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
+                    {{ $message }}
+
+                    @if (auth()->user()->user_type === 'expert' && $volunteers->isNotEmpty())
+                        <h3 class="mt-4">List of Volunteers:</h3>
+                        <ul>
+                            @foreach ($volunteers as $volunteer)
+                                <li>{{ $volunteer->name }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
             </div>
         </div>

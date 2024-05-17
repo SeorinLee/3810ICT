@@ -31,13 +31,16 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'user_code' => ['required', 'string', 'max:255', 'unique:' . User::class, 'regex:/^[emv][0-9]{6}$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $userType = $this->determineUserType($request->user_code);
+
         $user = User::create([
             'name' => $request->name,
-            'email' => $request->email,
+            'user_code' => $request->user_code,
+            'user_type' => $userType,
             'password' => Hash::make($request->password),
         ]);
 
@@ -45,6 +48,20 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect()->route('dashboard');
+    }
+
+    /**
+     * Determine the user type based on the user code prefix.
+     */
+    protected function determineUserType(string $userCode): string
+    {
+        $prefix = strtolower($userCode[0]);
+        return match ($prefix) {
+            'v' => 'volunteer',
+            'e' => 'expert',
+            'm' => 'manager',
+            default => 'volunteer', // 기본값은 volunteer로 설정합니다.
+        };
     }
 }
