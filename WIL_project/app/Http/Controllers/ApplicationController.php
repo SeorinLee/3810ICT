@@ -64,23 +64,56 @@ class ApplicationController extends Controller
 
         return response()->json(['success' => true]);
     }
+
     public function step3()
     {
-        return view('application.step3-quiz');
+        $user = Auth::user();
+        $application = Application::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+
+                'quiz_passed' => false,
+                'quiz_answers' => json_encode([])
+            ]
+        );
+
+        // 퀴즈 문제 설정
+        $questions = [
+            ['question' => '2 + 2 = ?', 'choices' => [3, 4, 5, 6], 'answer' => 4],
+            ['question' => '5 - 3 = ?', 'choices' => [1, 2, 3, 4], 'answer' => 2],
+            ['question' => '3 * 3 = ?', 'choices' => [6, 7, 8, 9], 'answer' => 9],
+            ['question' => '10 / 2 = ?', 'choices' => [2, 3, 4, 5], 'answer' => 5],
+            ['question' => '7 + 2 = ?', 'choices' => [8, 9, 10, 11], 'answer' => 9]
+        ];
+
+        return view('application.step3-quiz', compact('application', 'questions'));
     }
 
     public function storeStep3(Request $request)
     {
-        $validatedData = $request->validate([
-            'quiz_result' => 'required|string',
-        ]);
+        $correctAnswers = 0;
+        $questions = $request->input('questions');
+        $answers = $request->input('answers');
+
+        foreach ($questions as $index => $question) {
+            if ($question['answer'] == $answers[$index]) {
+                $correctAnswers++;
+            }
+        }
 
         $user = Auth::user();
         $application = Application::where('user_id', $user->id)->firstOrFail();
 
-        $application->update($validatedData);
+        $quizPassed = $correctAnswers >= 3;
+        $application->quiz_passed = $quizPassed;
+        $application->quiz_answers = json_encode($answers);
+        $application->save();
 
-        return response()->json(['success' => true]);
+        if ($quizPassed) {
+            return response()->json(['success' => true, 'quiz_passed' => true, 'correct_answers' => $correctAnswers]);
+        } else {
+            return response()->json(['success' => false, 'quiz_passed' => false, 'message' => 'You must answer at least 3 questions correctly to proceed.']);
+        }
     }
 
     public function step4()
@@ -150,7 +183,7 @@ class ApplicationController extends Controller
 
     public function storeStep7(Request $request)
     {
-        // 마지막 단계의 데이터를 저장하는 로직을 여기에 추가합니다.
+
         return response()->json(['success' => true]);
     }
 }
