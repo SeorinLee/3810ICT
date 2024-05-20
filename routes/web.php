@@ -1,12 +1,16 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ApplicantController;
+use App\Http\Controllers\VolunteerController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ManagerController;
+<<<<<<< Updated upstream
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApplicationController;
+=======
+>>>>>>> Stashed changes
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,19 +24,23 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Applicant routes
+// Volunteer routes
 Route::middleware(['auth', 'verified', 'role:volunteer'])->group(function () {
-    Route::get('/applicant/home', [ApplicantController::class, 'index'])->name('applicant.home');
+    Route::get('/volunteer/home', [VolunteerController::class, 'index'])->name('volunteer.home');
 });
 
-// Admin routes
+// Expert routes
 Route::middleware(['auth', 'verified', 'role:expert'])->group(function () {
-    Route::get('/admin/home', [AdminController::class, 'index'])->name('admin.home');
+    Route::get('/expert/home', function () {
+        return 'Expert home page';
+    })->name('expert.home');
 });
 
 // Manager routes
 Route::middleware(['auth', 'verified', 'role:manager'])->group(function () {
-    Route::get('/manager/home', [ManagerController::class, 'index'])->name('manager.home');
+    Route::get('/manager/home', function () {
+        return 'Manager home page';
+    })->name('manager.home');
 });
 
 Route::post('/volunteer/details/save', [ApplicationController::class, 'saveVolunteerDetails'])->name('volunteer.details.save');

@@ -15,23 +15,18 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $message = '';
-        $volunteers = [];
 
         switch ($user->user_type) {
             case 'volunteer':
-                $message = 'Welcome';
-                break;
+                return redirect()->route('volunteer.home');
             case 'expert':
-                $message = 'Hello';
-                $volunteers = User::where('user_type', 'volunteer')->get();
-                break;
+                return redirect()->route('expert.home');
             case 'manager':
-                $message = 'Hello Manager';
-                break;
+                return redirect()->route('manager.home');
             default:
                 $message = 'Welcome';
         }
 
-        return view('dashboard', ['message' => $message, 'volunteers' => $volunteers]);
+        return view('dashboard', ['message' => $message]);
     }
 }
