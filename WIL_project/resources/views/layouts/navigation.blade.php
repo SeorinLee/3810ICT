@@ -18,7 +18,7 @@
                     </x-nav-link>
 
                     <x-nav-link :href="route('application.step0')" :active="request()->routeIs('application.step0')">
-                        {{ __('Step 0') }}
+                        {{ __('Volunteer Page') }}
                     </x-nav-link>
 
                 </div>
