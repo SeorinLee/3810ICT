@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Application;
+use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log; // 추가
 
 class ApplicationController extends Controller
 {
@@ -118,14 +121,17 @@ class ApplicationController extends Controller
 
     public function step4()
     {
-        return view('application.step4-workshop');
+        $user = Auth::user();
+        $application = Application::where('user_id', $user->id)->first();
+
+        return view('application.step4-workshop', compact('application'));
     }
 
     public function storeStep4(Request $request)
     {
         $validatedData = $request->validate([
-            'workshop_info' => 'required|string',
-            'workshop_result' => 'required|string',
+            'workshop_info' => 'required|string|max:1000',
+            'workshop_result' => 'required|string|max:1000',
         ]);
 
         $user = Auth::user();
@@ -158,22 +164,36 @@ class ApplicationController extends Controller
 
     public function step6()
     {
-        return view('application.step6-uniqueJobPlan');
+        $user = Auth::user();
+        $application = Application::where('user_id', $user->id)->first();
+        $comments = Comment::where('application_id', $application->id)->with('user')->get();
+
+        return view('application.step6-uniqueJobPlan', compact('application', 'comments'));
     }
 
-    public function storeStep6(Request $request)
+    public function storeComment(Request $request)
     {
-        $validatedData = $request->validate([
-            'unique_job_plan' => 'required|string',
-            'unique_job_plan_comments' => 'required|string',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'comment' => 'required|string|max:1000',
+            ]);
 
-        $user = Auth::user();
-        $application = Application::where('user_id', $user->id)->firstOrFail();
+            $user = Auth::user();
+            $application = Application::where('user_id', $user->id)->firstOrFail();
 
-        $application->update($validatedData);
+            $comment = new Comment();
+            $comment->application_id = $application->id;
+            $comment->user_id = $user->id; // 추가
+            $comment->comment = $validatedData['comment'];
+            $comment->save();
 
-        return response()->json(['success' => true]);
+            $comment = $comment->load('user'); // 추가
+
+            return response()->json(['success' => true, 'comment' => $comment]);
+        } catch (\Exception $e) {
+            Log::error('Error storing comment: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to add comment.'], 500);
+        }
     }
 
     public function step7()

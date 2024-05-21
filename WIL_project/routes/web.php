@@ -61,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/application/step6', [ApplicationController::class, 'step6'])->name('application.step6');
     Route::post('/application/step6', [ApplicationController::class, 'storeStep6'])->name('application.storeStep6');
+    Route::post('/application/step6/comment', [ApplicationController::class, 'storeComment'])->name('application.storeComment');
+
 
     Route::get('/application/step7', [ApplicationController::class, 'step7'])->name('application.step7');
     Route::post('/application/step7', [ApplicationController::class, 'storeStep7'])->name('application.storeStep7');

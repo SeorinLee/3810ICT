@@ -1,10 +1,13 @@
+<!-- resources/views/application/step4-workshop.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             <span
-                style="color: black; background-color: white; padding: 5px; width: 600px; height: 20px; display: inline-block;">Workshop
-                Page</span>
+                style="color: black; background-color: white; padding: 5px; width: 600px; height: 20px; display: inline-block;">
+                Step 4: Workshop
+            </span>
         </h2>
+
         <!-- Progress Bar Section -->
         <div class="progress-bar-container"
             style="display: flex; justify-content: space-between; width: 70%; margin: 50px auto; position: relative;">
@@ -56,12 +59,72 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    @if($application)
+                        <form id="workshopForm" action="{{ route('application.storeStep4') }}" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="workshop_info">
+                                    Workshop Information
+                                </label>
+                                <textarea name="workshop_info" id="workshop_info" rows="4"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    required>{{ $application->workshop_info }}</textarea>
+                            </div>
 
-                    <P>Welcome to step4?</P>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="workshop_result">
+                                    Workshop Result
+                                </label>
+                                <textarea name="workshop_result" id="workshop_result" rows="4"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    required>{{ $application->workshop_result }}</textarea>
+                            </div>
 
-
+                            <div class="flex items-center justify-between">
+                                <button type="submit"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                    Save
+                                </button>
+                                <a href="{{ route('application.step5') }}"
+                                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                    Next
+                                </a>
+                            </div>
+                        </form>
+                    @else
+                        <p>No application found.</p>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('workshopForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                    'Accept': 'application/json',
+                },
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Workshop details saved successfully.');
+                    } else {
+                        alert('Failed to save workshop details.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to save workshop details.');
+                });
+        });
+    </script>
 </x-app-layout>
