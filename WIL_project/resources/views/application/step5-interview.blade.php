@@ -62,28 +62,29 @@
                     @if($application)
                         <div>
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="interview_script">
-                                Interview Script
+                                Interview session information
                             </label>
                             <textarea id="interview_script" name="interview_script" rows="10"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 required>{{ $application->interview_script }}</textarea>
                         </div>
-                        <div class="mt-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="interview_comments">
-                                Comments
-                            </label>
-                            <textarea id="interview_comments" name="interview_comments" rows="5"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ $application->interview_comments }}</textarea>
-                        </div>
+
                         <div class="flex items-center justify-between mt-4">
                             <button id="saveButton"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                Save
+                                change to check and confirmButton
                             </button>
                             <a href="{{ route('application.step6') }}"
                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                 Next
                             </a>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="interview_comments">
+                                interview finding and comment
+                            </label>
+                            <textarea id="interview_comments" name="interview_comments" rows="5"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ $application->interview_comments }}</textarea>
                         </div>
                     @else
                         <p>No application found.</p>

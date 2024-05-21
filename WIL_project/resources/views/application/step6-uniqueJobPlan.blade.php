@@ -78,7 +78,8 @@
                                     @foreach ($comments as $comment)
                                         <div class="comment" style="margin-bottom: 10px;">
                                             <div><strong>{{ $comment->user->name ?? 'Unknown User' }}</strong>:
-                                                {{ $comment->comment }}</div>
+                                                {{ $comment->comment }}
+                                            </div>
                                             <small>{{ $comment->created_at->format('Y-m-d H:i') }}</small>
                                         </div>
                                     @endforeach
@@ -94,10 +95,14 @@
                         </div>
 
                         <div class="flex items-center justify-between mt-4">
+                            <p>if u agree unique_job_plan click on confirm button if you do not agree leave your comments.
+                                We will revise your unique_job_plan shortly!
+                            </p>
                             <button id="confirmButton"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                Confirm
+                                Confirm(fix it )
                             </button>
+
                             <a href="{{ route('application.step7') }}"
                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                 Next

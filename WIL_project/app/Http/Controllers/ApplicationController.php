@@ -68,19 +68,46 @@ class ApplicationController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // public function step3()
+    // {
+    //     $user = Auth::user();
+    //     $application = Application::firstOrCreate(
+    //         ['user_id' => $user->id],
+    //         [
+
+    //             'quiz_passed' => false,
+    //             'quiz_answers' => json_encode([])
+    //         ]
+    //     );
+
+
+    //     $questions = [
+    //         ['question' => '2 + 2 = ?', 'choices' => [3, 4, 5, 6], 'answer' => 4],
+    //         ['question' => '5 - 3 = ?', 'choices' => [1, 2, 3, 4], 'answer' => 2],
+    //         ['question' => '3 * 3 = ?', 'choices' => [6, 7, 8, 9], 'answer' => 9],
+    //         ['question' => '10 / 2 = ?', 'choices' => [2, 3, 4, 5], 'answer' => 5],
+    //         ['question' => '7 + 2 = ?', 'choices' => [8, 9, 10, 11], 'answer' => 9]
+    //     ];
+
+    //     return view('application.step3-quiz', compact('application', 'questions'));
+    // }
+
     public function step3()
     {
         $user = Auth::user();
         $application = Application::firstOrCreate(
             ['user_id' => $user->id],
             [
-
+                'name' => 'Default Name',
+                'contact' => 'default contact',
+                'email' => 'default@example.com',
+                'reason' => 'Default reason',
                 'quiz_passed' => false,
                 'quiz_answers' => json_encode([])
             ]
         );
 
-        // 퀴즈 문제 설정
+
         $questions = [
             ['question' => '2 + 2 = ?', 'choices' => [3, 4, 5, 6], 'answer' => 4],
             ['question' => '5 - 3 = ?', 'choices' => [1, 2, 3, 4], 'answer' => 2],
