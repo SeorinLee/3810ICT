@@ -24,6 +24,8 @@ class Application extends Model
         'workshop_result',
         'interview_notes',
         'interview_result',
+        'interview_script',
+        'interview_comments',
         'unique_job_plan',
         'unique_job_plan_comments',
     ];

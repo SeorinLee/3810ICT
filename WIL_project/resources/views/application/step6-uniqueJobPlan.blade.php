@@ -70,7 +70,7 @@
                                     required>{{ $application->unique_job_plan }}</textarea>
                             </div>
                             <div style="width: 35%;">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="unique_job_plan_comments">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="comment">
                                     Feedback
                                 </label>
                                 <div id="comments-section"

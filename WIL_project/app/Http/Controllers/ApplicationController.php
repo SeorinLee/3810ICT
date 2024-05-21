@@ -144,20 +144,26 @@ class ApplicationController extends Controller
 
     public function step5()
     {
-        return view('application.step5-interview');
+        $user = Auth::user();
+        $application = Application::where('user_id', $user->id)->first();
+        $comments = Comment::where('application_id', $application->id)->with('user')->get();
+
+        return view('application.step5-interview', compact('application', 'comments'));
     }
 
     public function storeStep5(Request $request)
     {
         $validatedData = $request->validate([
-            'interview_notes' => 'required|string',
-            'interview_result' => 'required|string',
+            'interview_script' => 'required|string',
+            'interview_comments' => 'nullable|string',
         ]);
 
         $user = Auth::user();
         $application = Application::where('user_id', $user->id)->firstOrFail();
 
-        $application->update($validatedData);
+        $application->interview_script = $validatedData['interview_script'];
+        $application->interview_comments = $validatedData['interview_comments'];
+        $application->save();
 
         return response()->json(['success' => true]);
     }

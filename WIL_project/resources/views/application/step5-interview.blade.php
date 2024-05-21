@@ -1,13 +1,16 @@
+<!-- resources/views/application/step5-interview.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             <span
-                style="color: black; background-color: white; padding: 5px; width: 600px; height: 20px; display: inline-block;">Interview
-                Page</span>
+                style="color: black; background-color: white; padding: 5px; width: 800px; height: 20px; display: inline-block;">
+                Interview
+            </span>
         </h2>
+
         <!-- Progress Bar Section -->
         <div class="progress-bar-container"
-            style="display: flex; justify-content: space-between; width: 70%; margin: 50px auto; position: relative;">
+            style="display: flex; justify-content: space-between; width: 80%; margin: 50px auto; position: relative;">
             @php
                 // Define the current step
                 $currentStep = "Interview";
@@ -56,12 +59,68 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-
-                    <P>Welcome to step5?</P>
-
-
+                    @if($application)
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="interview_script">
+                                Interview Script
+                            </label>
+                            <textarea id="interview_script" name="interview_script" rows="10"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                required>{{ $application->interview_script }}</textarea>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="interview_comments">
+                                Comments
+                            </label>
+                            <textarea id="interview_comments" name="interview_comments" rows="5"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ $application->interview_comments }}</textarea>
+                        </div>
+                        <div class="flex items-center justify-between mt-4">
+                            <button id="saveButton"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Save
+                            </button>
+                            <a href="{{ route('application.step6') }}"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Next
+                            </a>
+                        </div>
+                    @else
+                        <p>No application found.</p>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('saveButton').addEventListener('click', function () {
+            const interviewScript = document.getElementById('interview_script').value;
+            const interviewComments = document.getElementById('interview_comments').value;
+
+            fetch('{{ route('application.storeStep5') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    interview_script: interviewScript,
+                    interview_comments: interviewComments
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Interview details saved successfully.');
+                    } else {
+                        alert('Failed to save interview details.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to save interview details.');
+                });
+        });
+    </script>
 </x-app-layout>

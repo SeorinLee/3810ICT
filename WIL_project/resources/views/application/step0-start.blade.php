@@ -1,15 +1,16 @@
+<!-- resources/views/application/step0-start.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             <span
-                style="color: black; background-color: white; padding: 5px; width: 600px; height: 20px; display: inline-block;">
-                Start Page
+                style="color: black; background-color: white; padding: 5px; width: 800px; height: 20px; display: inline-block;">
+                Volunteer Introduction
             </span>
         </h2>
 
         <!-- Progress Bar Section -->
         <div class="progress-bar-container"
-            style="display: flex; justify-content: space-between; width: 70%; margin: 50px auto; position: relative;">
+            style="display: flex; justify-content: space-between; width: 80%; margin: 50px auto; position: relative;">
             @php
                 // Define the current step
                 $currentStep = "Start";
@@ -54,13 +55,19 @@
         </div>
     </x-slot>
 
-
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <p>Welcome to step0?</p>
+                    <p>Welcome to the Volunteer Application Process. Here you will find information about the steps
+                        required to complete your application.</p>
+                    <p>Click the button below to start your application.</p>
+                    <div class="flex items-center justify-between mt-4">
+                        <a href="{{ route('application.step1') }}"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Start
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
