@@ -12,7 +12,7 @@ class Comment extends Model
 
     protected $fillable = [
         'application_id',
-        'user_id', // 추가
+        'user_id',
         'comment',
     ];
 

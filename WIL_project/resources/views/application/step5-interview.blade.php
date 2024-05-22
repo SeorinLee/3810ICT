@@ -104,7 +104,7 @@
                                         style="height: 200px; border: 1px solid #ccc; padding: 10px;">
                                         @foreach ($comments as $comment)
                                             <div class="mb-2">
-                                                <strong>{{ $comment->user->name }}:</strong> {{ $comment->comment }}
+                                                <strong>{{ $comment->user->first_name }}:</strong> {{ $comment->comment }}
                                                 <br>
                                                 <small>[{{ $comment->created_at->format('Y-m-d H:i') }}]</small>
                                             </div>

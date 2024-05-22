@@ -30,7 +30,10 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+            'contact_number' => ['required', 'string', 'regex:/^(\+61|0)[4-5]\d{8}$/'],
             'user_code' => ['required', 'string', 'max:255', 'unique:' . User::class, 'regex:/^[emv][0-9]{6}$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -38,7 +41,10 @@ class RegisteredUserController extends Controller
         $userType = $this->determineUserType($request->user_code);
 
         $user = User::create([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'contact_number' => $request->contact_number,
             'user_code' => $request->user_code,
             'user_type' => $userType,
             'password' => Hash::make($request->password),
@@ -61,7 +67,7 @@ class RegisteredUserController extends Controller
             'v' => 'volunteer',
             'e' => 'expert',
             'm' => 'manager',
-            default => 'volunteer', // 기본값은 volunteer로 설정합니다.
+            default => null,
         };
     }
 }

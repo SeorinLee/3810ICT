@@ -8,8 +8,6 @@
             </span>
         </h2>
 
-
-
         <!-- Progress Bar Section -->
         <div class="progress-bar-container"
             style="display: flex; justify-content: space-between; width: 100%; margin: 50px auto; position: relative;">
@@ -55,9 +53,6 @@
                         </div>
             @endforeach
         </div>
-
-
-
     </x-slot>
 
     <div class="py-12">
@@ -71,9 +66,8 @@
                                     Unique Job Plan
                                 </label>
                                 <p><small>Note: If you agree with the Unique Job Plan, click on the Confirm button. If you
-                                        do not
-                                        agree,
-                                        leave your comments. We will revise your Unique Job Plan shortly!</small></p>
+                                        do not agree, leave your comments. We will revise your Unique Job Plan
+                                        shortly!</small></p>
                                 <textarea id="unique_job_plan" name="unique_job_plan" rows="20"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     required>{{ $application->unique_job_plan }}</textarea>
@@ -86,7 +80,7 @@
                                     style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-bottom: 1rem;">
                                     @foreach ($comments as $comment)
                                         <div class="comment mb-2">
-                                            <div><strong>{{ $comment->user->name ?? 'Unknown User' }}</strong>:
+                                            <div><strong>{{ $comment->user->first_name ?? 'Unknown User' }}</strong>:
                                                 {{ $comment->comment }}
                                             </div>
                                             <small>{{ $comment->created_at->format('Y-m-d H:i') }}</small>
@@ -106,7 +100,6 @@
                         </div>
 
                         <div class="flex items-center justify-between mt-4">
-
                             <div class="flex items-center space-x-4">
                                 <button id="confirmButton"
                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">

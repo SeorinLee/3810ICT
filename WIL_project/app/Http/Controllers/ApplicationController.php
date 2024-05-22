@@ -250,6 +250,31 @@ class ApplicationController extends Controller
         return view('application.step6-uniqueJobPlan', compact('application', 'comments'));
     }
 
+    // public function storeComment(Request $request)
+    // {
+    //     try {
+    //         $validatedData = $request->validate([
+    //             'comment' => 'required|string|max:1000',
+    //         ]);
+
+    //         $user = Auth::user();
+    //         $application = Application::where('user_id', $user->id)->firstOrFail();
+
+    //         $comment = new Comment();
+    //         $comment->application_id = $application->id;
+    //         $comment->user_id = $user->id;
+    //         $comment->comment = $validatedData['comment'];
+    //         $comment->save();
+
+    //         $comment = $comment->load('user');
+
+    //         return response()->json(['success' => true, 'comment' => $comment]);
+    //     } catch (\Exception $e) {
+    //         Log::error('Error storing comment: ' . $e->getMessage());
+    //         return response()->json(['success' => false, 'message' => 'Failed to add comment.'], 500);
+    //     }
+    // }
+
     public function storeComment(Request $request)
     {
         try {
@@ -266,7 +291,12 @@ class ApplicationController extends Controller
             $comment->comment = $validatedData['comment'];
             $comment->save();
 
-            $comment = $comment->load('user');
+            // Comment 모델에서 user 관계를 통해 user_code를 기반으로 이름과 성을 가져옴
+            $comment = $comment->load([
+                'user' => function ($query) {
+                    $query->select('id', 'first_name', 'last_name', 'user_code');
+                }
+            ]);
 
             return response()->json(['success' => true, 'comment' => $comment]);
         } catch (\Exception $e) {
@@ -274,7 +304,6 @@ class ApplicationController extends Controller
             return response()->json(['success' => false, 'message' => 'Failed to add comment.'], 500);
         }
     }
-
 
     public function step7()
     {
