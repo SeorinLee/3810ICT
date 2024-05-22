@@ -94,22 +94,57 @@ class ApplicationController extends Controller
         $application = Application::firstOrCreate(
             ['user_id' => $user->id],
             [
-                // 'name' => 'Default Name',
-                // 'contact' => 'default contact',
-                // 'experience' => 'default@example.com',
-                // 'reason' => 'Default reason',
                 'quiz_passed' => false,
                 'quiz_answers' => json_encode([])
             ]
         );
 
-
         $questions = [
-            ['question' => '2 + 2 = ?', 'choices' => [3, 4, 5, 6], 'answer' => 4],
-            ['question' => '5 - 3 = ?', 'choices' => [1, 2, 3, 4], 'answer' => 2],
-            ['question' => '3 * 3 = ?', 'choices' => [6, 7, 8, 9], 'answer' => 9],
-            ['question' => '10 / 2 = ?', 'choices' => [2, 3, 4, 5], 'answer' => 5],
-            ['question' => '7 + 2 = ?', 'choices' => [8, 9, 10, 11], 'answer' => 9]
+            [
+                'question' => 'What below statement does explain job crafting?',
+                'choices' => [
+                    'a) Job crafting is only for volunteers who do not care about their job.',
+                    'b) Job crafting is a bottom-up approach that involves volunteer voice in volunteering job.',
+                    'c) Job crafting is a top-down approach that involves managers to design volunteers’ work.'
+                ],
+                'answer' => 'b) Job crafting is a bottom-up approach that involves volunteer voice in volunteering job.'
+            ],
+            [
+                'question' => 'Why job crafting is important for volunteers?',
+                'choices' => [
+                    'a) It leads to volunteer engagement, well-being, and performance.',
+                    'b) It leads to escape from volunteering job.',
+                    'c) It leads to escape from the club.'
+                ],
+                'answer' => 'a) It leads to volunteer engagement, well-being, and performance.'
+            ],
+            [
+                'question' => 'Approach job crafting is about ….?',
+                'choices' => [
+                    'a) … removing tasks from volunteering job.',
+                    'b) … adding extra tasks to the volunteering job.',
+                    'c) … leaving volunteering job because of work overload.'
+                ],
+                'answer' => 'b) … adding extra tasks to the volunteering job.'
+            ],
+            [
+                'question' => 'Avoidance job crafting is about ….?',
+                'choices' => [
+                    'a) … removing tasks from volunteering job.',
+                    'b) … adding extra tasks to the volunteering job.',
+                    'c) … leaving volunteering job because of work overload.'
+                ],
+                'answer' => 'a) … removing tasks from volunteering job.'
+            ],
+            [
+                'question' => 'What does “job co-crafting” mean?',
+                'choices' => [
+                    'a) Each volunteer collaborates with club manager to co-create customised work plan.',
+                    'b) Only managers develop the customised work plan.',
+                    'c) Only volunteers develop the customised work plan.'
+                ],
+                'answer' => 'a) Each volunteer collaborates with club manager to co-create customised work plan.'
+            ]
         ];
 
         return view('application.step3-quiz', compact('application', 'questions'));
@@ -141,6 +176,7 @@ class ApplicationController extends Controller
             return response()->json(['success' => false, 'quiz_passed' => false, 'message' => 'You must answer at least 3 questions correctly to proceed.']);
         }
     }
+
 
     public function step4()
     {
@@ -191,39 +227,7 @@ class ApplicationController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // public function step6()
-    // {
-    //     $user = Auth::user();
-    //     $application = Application::where('user_id', $user->id)->first();
-    //     $comments = Comment::where('application_id', $application->id)->with('user')->get();
 
-    //     return view('application.step6-uniqueJobPlan', compact('application', 'comments'));
-    // }
-
-    // public function storeComment(Request $request)
-    // {
-    //     try {
-    //         $validatedData = $request->validate([
-    //             'comment' => 'required|string|max:1000',
-    //         ]);
-
-    //         $user = Auth::user();
-    //         $application = Application::where('user_id', $user->id)->firstOrFail();
-
-    //         $comment = new Comment();
-    //         $comment->application_id = $application->id;
-    //         $comment->user_id = $user->id; // 추가
-    //         $comment->comment = $validatedData['comment'];
-    //         $comment->save();
-
-    //         $comment = $comment->load('user'); // 추가
-
-    //         return response()->json(['success' => true, 'comment' => $comment]);
-    //     } catch (\Exception $e) {
-    //         Log::error('Error storing comment: ' . $e->getMessage());
-    //         return response()->json(['success' => false, 'message' => 'Failed to add comment.'], 500);
-    //     }
-    // }
 
     public function step6()
     {
