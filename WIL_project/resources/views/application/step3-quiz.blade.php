@@ -10,7 +10,7 @@
 
         <!-- Progress Bar Section -->
         <div class="progress-bar-container"
-            style="display: flex; justify-content: space-between; width: 70%; margin: 50px auto; position: relative;">
+            style="display: flex; justify-content: space-between; width: 100%; margin: 50px auto; position: relative;">
             @php
                 // Define the current step
                 $currentStep = "Quiz";
@@ -38,7 +38,7 @@
                             style="position: relative; padding: 10px; {{ $isCompleted }} font-size: 14px; text-align: center; flex: 1; cursor: pointer; margin-top: 20px;">
                             <a href="{{ route($route) }}" style="text-decoration: none; color: inherit;">
                                 <div
-                                    style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; border: 2px solid #ccc; border-radius: 50%; {{ $circleColor }}">
+                                    style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px; border: 2px solid #ccc; border-radius: 50%; {{ $circleColor }}">
                                 </div>
                                 {{ $step }}
                             </a>
@@ -47,12 +47,14 @@
                                             $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
                                         @endphp
                                         <div
-                                            style="position: absolute; top: -10px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
+                                            style="position: absolute; top: -12px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
                                         </div>
                             @endif
                         </div>
             @endforeach
         </div>
+
+
     </x-slot>
 
     <div class="py-12">

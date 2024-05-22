@@ -201,6 +201,8 @@ class ApplicationController extends Controller
         return response()->json(['success' => true]);
     }
 
+
+
     public function step5()
     {
         $user = Auth::user();
@@ -212,22 +214,32 @@ class ApplicationController extends Controller
 
     public function storeStep5(Request $request)
     {
-        $validatedData = $request->validate([
-            'interview_script' => 'required|string',
-            'interview_comments' => 'nullable|string',
-        ]);
+        try {
 
-        $user = Auth::user();
-        $application = Application::where('user_id', $user->id)->firstOrFail();
+            $user = Auth::user();
+            $application = Application::where('user_id', $user->id)->firstOrFail();
 
-        $application->interview_script = $validatedData['interview_script'];
-        $application->interview_comments = $validatedData['interview_comments'];
-        $application->save();
+            if ($request->has('interview_script')) {
+                $application->interview_script = $request->input('interview_script');
+            }
 
-        return response()->json(['success' => true]);
+            if ($request->has('interview_comments')) {
+                $comment = new Comment();
+                $comment->application_id = $application->id;
+                $comment->user_id = $user->id;
+
+                $comment->comment = $request->input('interview_comments');
+                $comment->save();
+                return response()->json(['success' => true, 'comment' => $comment->load('user')]);
+            }
+
+            $application->save();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            Log::error('Error storing interview details: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to save interview details.'], 500);
+        }
     }
-
-
 
     public function step6()
     {

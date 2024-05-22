@@ -10,7 +10,7 @@
 
         <!-- Progress Bar Section -->
         <div class="progress-bar-container"
-            style="display: flex; justify-content: space-between; width: 70%; margin: 50px auto; position: relative;">
+            style="display: flex; justify-content: space-between; width: 100%; margin: 50px auto; position: relative;">
             @php
                 // Define the current step
                 $currentStep = "Workshop";
@@ -38,7 +38,7 @@
                             style="position: relative; padding: 10px; {{ $isCompleted }} font-size: 14px; text-align: center; flex: 1; cursor: pointer; margin-top: 20px;">
                             <a href="{{ route($route) }}" style="text-decoration: none; color: inherit;">
                                 <div
-                                    style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; border: 2px solid #ccc; border-radius: 50%; {{ $circleColor }}">
+                                    style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px; border: 2px solid #ccc; border-radius: 50%; {{ $circleColor }}">
                                 </div>
                                 {{ $step }}
                             </a>
@@ -47,12 +47,15 @@
                                             $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
                                         @endphp
                                         <div
-                                            style="position: absolute; top: -10px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
+                                            style="position: absolute; top: -12px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
                                         </div>
                             @endif
                         </div>
             @endforeach
         </div>
+
+
+
     </x-slot>
 
     <div class="py-12">
@@ -71,10 +74,8 @@
                                     required>{{ $application->workshop_info }}</textarea>
                             </div>
 
-
-
                             <div class="flex items-center justify-between">
-                                <button type="submit"
+                                <button type="button" id="checkResultButton"
                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                     Check Result
                                 </button>
@@ -83,7 +84,8 @@
                                     Next
                                 </a>
                             </div>
-                            <div class="mb-4">
+
+                            <div class="mb-4" id="workshopResultSection" style="display: none;">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="workshop_result">
                                     Workshop Result
                                 </label>
@@ -101,6 +103,10 @@
     </div>
 
     <script>
+        document.getElementById('checkResultButton').addEventListener('click', function () {
+            document.getElementById('workshopResultSection').style.display = 'block';
+        });
+
         document.getElementById('workshopForm').addEventListener('submit', function (event) {
             event.preventDefault();
             const form = event.target;
