@@ -1,6 +1,6 @@
 <?php
-
 // app/Models/Application.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,19 +13,18 @@ class Application extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'contact',
-        'email',
+        'gender',
+        'dob',
         'reason',
+        'experience',
+        'position_title',
         'video_link',
         'document_link',
-        'quiz_passed',
-        'quiz_answers',
+        'quiz_result',
         'workshop_info',
         'workshop_result',
         'interview_notes',
         'interview_result',
-        'interview_script',
-        'interview_comments',
         'unique_job_plan',
         'unique_job_plan_comments',
     ];

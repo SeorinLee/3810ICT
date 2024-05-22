@@ -8,7 +8,7 @@ use App\Models\Application;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log; // 추가
+use Illuminate\Support\Facades\Log;
 
 class ApplicationController extends Controller
 {
@@ -24,26 +24,44 @@ class ApplicationController extends Controller
         $user = Auth::user();
         $application = Application::where('user_id', $user->id)->first();
 
+        Log::info('Step1 - Loaded application', ['application' => $application]);
+
         return view('application.step1-VolunteerDetails', compact('application'));
     }
 
     public function storeStep1(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'contact' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'reason' => 'required|string',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'club_name' => 'nullable|string|max:255',
+                'position_title' => 'nullable|string|max:255',
+                'gender' => 'nullable|string|max:10',
+                'dob' => 'nullable|date',
+                'volunteering_experience' => 'nullable|string',
+                'reason' => 'nullable|string',
+            ]);
 
-        $user = Auth::user();
+            $user = Auth::user();
 
-        $application = Application::updateOrCreate(
-            ['user_id' => $user->id],
-            $validatedData
-        );
+            $application = Application::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'name' => $validatedData['club_name'],
+                    'position_title' => $validatedData['position_title'],
+                    'gender' => $validatedData['gender'],
+                    'dob' => $validatedData['dob'],
+                    'experience' => $validatedData['volunteering_experience'],
+                    'reason' => $validatedData['reason'],
+                ]
+            );
 
-        return response()->json(['success' => true]);
+            Log::info('Step1 - Stored application', ['application' => $application]);
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            Log::error('Error storing step1 data: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to save details.'], 500);
+        }
     }
     public function step2()
     {
@@ -68,29 +86,7 @@ class ApplicationController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // public function step3()
-    // {
-    //     $user = Auth::user();
-    //     $application = Application::firstOrCreate(
-    //         ['user_id' => $user->id],
-    //         [
 
-    //             'quiz_passed' => false,
-    //             'quiz_answers' => json_encode([])
-    //         ]
-    //     );
-
-
-    //     $questions = [
-    //         ['question' => '2 + 2 = ?', 'choices' => [3, 4, 5, 6], 'answer' => 4],
-    //         ['question' => '5 - 3 = ?', 'choices' => [1, 2, 3, 4], 'answer' => 2],
-    //         ['question' => '3 * 3 = ?', 'choices' => [6, 7, 8, 9], 'answer' => 9],
-    //         ['question' => '10 / 2 = ?', 'choices' => [2, 3, 4, 5], 'answer' => 5],
-    //         ['question' => '7 + 2 = ?', 'choices' => [8, 9, 10, 11], 'answer' => 9]
-    //     ];
-
-    //     return view('application.step3-quiz', compact('application', 'questions'));
-    // }
 
     public function step3()
     {
@@ -98,10 +94,10 @@ class ApplicationController extends Controller
         $application = Application::firstOrCreate(
             ['user_id' => $user->id],
             [
-                'name' => 'Default Name',
-                'contact' => 'default contact',
-                'email' => 'default@example.com',
-                'reason' => 'Default reason',
+                // 'name' => 'Default Name',
+                // 'contact' => 'default contact',
+                // 'experience' => 'default@example.com',
+                // 'reason' => 'Default reason',
                 'quiz_passed' => false,
                 'quiz_answers' => json_encode([])
             ]
@@ -195,6 +191,40 @@ class ApplicationController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // public function step6()
+    // {
+    //     $user = Auth::user();
+    //     $application = Application::where('user_id', $user->id)->first();
+    //     $comments = Comment::where('application_id', $application->id)->with('user')->get();
+
+    //     return view('application.step6-uniqueJobPlan', compact('application', 'comments'));
+    // }
+
+    // public function storeComment(Request $request)
+    // {
+    //     try {
+    //         $validatedData = $request->validate([
+    //             'comment' => 'required|string|max:1000',
+    //         ]);
+
+    //         $user = Auth::user();
+    //         $application = Application::where('user_id', $user->id)->firstOrFail();
+
+    //         $comment = new Comment();
+    //         $comment->application_id = $application->id;
+    //         $comment->user_id = $user->id; // 추가
+    //         $comment->comment = $validatedData['comment'];
+    //         $comment->save();
+
+    //         $comment = $comment->load('user'); // 추가
+
+    //         return response()->json(['success' => true, 'comment' => $comment]);
+    //     } catch (\Exception $e) {
+    //         Log::error('Error storing comment: ' . $e->getMessage());
+    //         return response()->json(['success' => false, 'message' => 'Failed to add comment.'], 500);
+    //     }
+    // }
+
     public function step6()
     {
         $user = Auth::user();
@@ -216,11 +246,11 @@ class ApplicationController extends Controller
 
             $comment = new Comment();
             $comment->application_id = $application->id;
-            $comment->user_id = $user->id; // 추가
+            $comment->user_id = $user->id;
             $comment->comment = $validatedData['comment'];
             $comment->save();
 
-            $comment = $comment->load('user'); // 추가
+            $comment = $comment->load('user');
 
             return response()->json(['success' => true, 'comment' => $comment]);
         } catch (\Exception $e) {
@@ -228,6 +258,7 @@ class ApplicationController extends Controller
             return response()->json(['success' => false, 'message' => 'Failed to add comment.'], 500);
         }
     }
+
 
     public function step7()
     {

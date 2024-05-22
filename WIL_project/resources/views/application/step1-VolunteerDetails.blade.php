@@ -3,14 +3,14 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             <span
-                style="color: black; background-color: white; padding: 5px; width: 600px; height: 20px; display: inline-block;">
-                Detail Pages
+                style="color: black; background-color: white; padding: 5px; width: 800px; height: 20px; display: inline-block;">
+                Volunteer Details
             </span>
         </h2>
 
         <!-- Progress Bar Section -->
         <div class="progress-bar-container"
-            style="display: flex; justify-content: space-between; width: 70%; margin: 50px auto; position: relative;">
+            style="display: flex; justify-content: space-between; width: 80%; margin: 50px auto; position: relative;">
             @php
                 // Define the current step
                 $currentStep = "Volunteer Details";
@@ -59,101 +59,128 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <p>Welcome to step1?</p>
-
-                    <!-- Form Section -->
-                    <form id="applicationForm" action="{{ route('application.storeStep1') }}" method="POST">
+                    <form id="applicationForm">
                         @csrf
-                        <div style="font-weight: bold; font-size: 1.5rem; line-height: 3; padding-left: 300px;">
-                            Name:
-                            <input type="text" id="name" name="name"
-                                style="width: 500px; padding: 10px; margin-left: 20px; font-size: 1.2rem; border: 1px solid #ccc; border-radius: 5px;"
-                                value="{{ old('name', $application->name ?? '') }}" required>
+                        <div class="mb-4">
+                            <label for="club_name" class="block text-gray-700 text-sm font-bold mb-2">Club Name</label>
+                            <input type="text" id="club_name" name="club_name" value="{{ $application->name ?? '' }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
-                        <div style="font-weight: bold; font-size: 1.5rem; line-height: 3; padding-left: 300px;">
-                            Contact:
-                            <input type="text" id="contact" name="contact"
-                                style="width: 500px; padding: 10px; margin-left: 20px; font-size: 1.2rem; border: 1px solid #ccc; border-radius: 5px;"
-                                value="{{ old('contact', $application->contact ?? '') }}" required>
+                        <div class="mb-4">
+                            <label for="position_title" class="block text-gray-700 text-sm font-bold mb-2">Position
+                                Title</label>
+                            <input type="text" id="position_title" name="position_title"
+                                value="{{ $application->position_title ?? '' }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
-                        <div style="font-weight: bold; font-size: 1.5rem; line-height: 3; padding-left: 300px;">
-                            Email:
-                            <input type="email" id="email" name="email"
-                                style="width: 500px; padding: 10px; margin-left: 20px; font-size: 1.2rem; border: 1px solid #ccc; border-radius: 5px;"
-                                value="{{ old('email', $application->email ?? '') }}" required>
+                        <div class="mb-4">
+                            <label for="gender" class="block text-gray-700 text-sm font-bold mb-2">Gender</label>
+                            <select id="gender" name="gender"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="male" {{ ($application->gender ?? '') == 'male' ? 'selected' : '' }}>Male
+                                </option>
+                                <option value="female" {{ ($application->gender ?? '') == 'female' ? 'selected' : '' }}>
+                                    Female</option>
+                                <option value="other" {{ ($application->gender ?? '') == 'other' ? 'selected' : '' }}>
+                                    Other</option>
+                            </select>
                         </div>
-                        <div style="font-weight: bold; font-size: 1.5rem; line-height: 3; padding-left: 300px;">
-                            Reason for participating:
-                            <textarea id="reason" name="reason"
-                                style="width: 500px; padding: 10px; margin-left: 20px; font-size: 1.2rem; border: 1px solid #ccc; border-radius: 5px;"
-                                required>{{ old('reason', $application->reason ?? '') }}</textarea>
+                        <div class="mb-4">
+                            <label for="dob" class="block text-gray-700 text-sm font-bold mb-2">Date of Birth</label>
+                            <input type="date" id="dob" name="dob" value="{{ $application->dob ?? '' }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
-
-                        <!-- Save and Next Button Section -->
-                        <div class="row justify-content-center"
-                            style="margin-top: 1px; padding-right: 50px; margin-bottom: 50px;">
-                            <div class="card-body" style="display: flex; justify-content: right;">
-                                <button type="button" onclick="saveApplication()"
-                                    style="padding: 7px 17px; font-size: 1rem;">Save</button>
-                                <button type="button" onclick="confirmNextStep()"
-                                    style="padding: 7px 17px; font-size: 1rem; margin-left: 10px;">Next</button>
-                            </div>
+                        <div class="mb-4">
+                            <label for="volunteering_experience"
+                                class="block text-gray-700 text-sm font-bold mb-2">Volunteering Experience</label>
+                            <textarea id="volunteering_experience" name="volunteering_experience" rows="4"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ $application->experience ?? '' }}</textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="reason" class="block text-gray-700 text-sm font-bold mb-2">Reason for
+                                Participating</label>
+                            <textarea id="reason" name="reason" rows="4"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ $application->reason ?? '' }}</textarea>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <button type="button" id="saveButton"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Save & Next
+                            </button>
                         </div>
                     </form>
-                    <!-- End of Form Section -->
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let isSaved = false;
-
-        function saveApplication() {
+        document.getElementById('saveButton').addEventListener('click', function () {
             const form = document.getElementById('applicationForm');
             const formData = new FormData(form);
+            let missingFields = [];
 
-            fetch(form.action, {
+            formData.forEach((value, key) => {
+                if (!value) {
+                    missingFields.push(key);
+                }
+            });
+
+            if (missingFields.length > 0) {
+                if (!confirm('Some fields are empty. Do you want to proceed without filling them?')) {
+                    return;
+                }
+            }
+
+            fetch('{{ route('application.storeStep1') }}', {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: formData
             })
-                .then(response => {
-                    return response.text().then(text => {
-                        try {
-                            return JSON.parse(text);
-                        } catch (err) {
-                            console.error('Response is not valid JSON:', text);
-                            throw err;
-                        }
-                    });
-                })
+                .then(response => response.json())
                 .then(data => {
-                    console.log(data);  // 응답 데이터를 콘솔에 출력
+                    console.log('Response:', data); // 응답을 콘솔에 로그
                     if (data.success) {
-                        isSaved = true;
-                        alert('Application saved successfully!');
+                        alert('Details saved successfully.');
+                        window.location.href = '{{ route('application.step2') }}';
                     } else {
-                        alert('Failed to save application.');
+                        alert('Failed to save details.');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to save application.');
+                    alert('Failed to save details.');
                 });
-        }
+        });
 
-        function confirmNextStep() {
-            if (!isSaved) {
-                if (confirm('The application has not been saved. Do you want to proceed without saving?')) {
-                    window.location.href = '{{ route('application.step2') }}';
-                }
-            } else {
-                window.location.href = '{{ route('application.step2') }}';
-            }
-        }
+        // 자동 저장 기능 추가
+        document.querySelectorAll('#applicationForm input, #applicationForm textarea, #applicationForm select').forEach(element => {
+            element.addEventListener('change', function () {
+                const form = document.getElementById('applicationForm');
+                const formData = new FormData(form);
+
+                fetch('{{ route('application.storeStep1') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Auto-save Response:', data); // 응답을 콘솔에 로그
+                        if (data.success) {
+                            console.log('Details saved automatically.');
+                        } else {
+                            console.error('Failed to save details automatically.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
     </script>
 </x-app-layout>
