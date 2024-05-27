@@ -30,6 +30,7 @@
 
             @foreach ($steps as $step => $route)
                         @php
+                            // Determine if the current step is completed or not
                             $isCompleted = ($step == $currentStep) ? 'color: black;' : 'color: #888;';
                             $circleColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : '';
                         @endphp
@@ -43,18 +44,17 @@
                                 {{ $step }}
                             </a>
                             @if (!$loop->first)
-                                        @php
-                                            $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
-                                        @endphp
-                                        <div
-                                            style="position: absolute; top: -12px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
-                                        </div>
+                                            @php
+                                                // Determine the color of the line connecting the steps
+                                                $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
+                                            @endphp
+                                <div
+                                                style="position: absolute; top: -12px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
+                                            </div>
                             @endif
                         </div>
             @endforeach
         </div>
-
-
     </x-slot>
 
     <div class="py-12">
@@ -62,10 +62,12 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     @if($application->quiz_passed)
+                        <!-- Message displayed if the quiz has been passed -->
                         <p>Congratulations! You passed the quiz.</p>
                         <p>You answered {{ count(json_decode($application->quiz_answers, true)) }} questions correctly.</p>
                         <a href="{{ route('application.step4') }}" class="btn btn-primary">Next</a>
                     @else
+                        <!-- Message displayed if the quiz has not been passed -->
                         <p>Step 3: Please answer the following quiz questions</p>
 
                         <!-- Quiz Form -->
@@ -96,8 +98,8 @@
         </div>
     </div>
 
-
     <script>
+        // Add event listener to the quiz form to handle submission
         document.addEventListener('DOMContentLoaded', function () {
             const quizForm = document.getElementById('quizForm');
             if (quizForm) {
@@ -106,6 +108,7 @@
                     const form = event.target;
                     const formData = new FormData(form);
 
+                    // Submit the form data using Fetch API
                     fetch(form.action, {
                         method: 'POST',
                         headers: {
@@ -117,14 +120,14 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                location.reload();
+                                location.reload(); // Reload the page on successful submission
                             } else {
-                                alert(data.message);
+                                alert(data.message); // Show error message if submission fails
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('Failed to submit the quiz.');
+                            alert('Failed to submit the quiz.'); // Show error message if there is an exception
                         });
                 });
             }

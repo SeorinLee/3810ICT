@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Log;
 
 class ApplicationController extends Controller
 {
-
-
+    // Display the start view
     public function step0()
     {
         return view('application.step0-start');
     }
 
+    // Display the volunteer details view
     public function step1()
     {
         $user = Auth::user();
@@ -29,6 +29,7 @@ class ApplicationController extends Controller
         return view('application.step1-VolunteerDetails', compact('application'));
     }
 
+    // Store the volunteer details
     public function storeStep1(Request $request)
     {
         try {
@@ -63,6 +64,8 @@ class ApplicationController extends Controller
             return response()->json(['success' => false, 'message' => 'Failed to save details.'], 500);
         }
     }
+
+    // Display the video and document upload view
     public function step2()
     {
         $user = Auth::user();
@@ -71,6 +74,7 @@ class ApplicationController extends Controller
         return view('application.step2-video_doc', compact('application'));
     }
 
+    // Store the video and document links
     public function storeStep2(Request $request)
     {
         $validatedData = $request->validate([
@@ -86,8 +90,7 @@ class ApplicationController extends Controller
         return response()->json(['success' => true]);
     }
 
-
-
+    // Display the quiz view with questions
     public function step3()
     {
         $user = Auth::user();
@@ -150,6 +153,7 @@ class ApplicationController extends Controller
         return view('application.step3-quiz', compact('application', 'questions'));
     }
 
+    // Store the quiz answers and check if the quiz is passed
     public function storeStep3(Request $request)
     {
         $correctAnswers = 0;
@@ -177,7 +181,7 @@ class ApplicationController extends Controller
         }
     }
 
-
+    // Display the workshop information view
     public function step4()
     {
         $user = Auth::user();
@@ -186,6 +190,7 @@ class ApplicationController extends Controller
         return view('application.step4-workshop', compact('application'));
     }
 
+    // Store the workshop information and results
     public function storeStep4(Request $request)
     {
         $validatedData = $request->validate([
@@ -201,8 +206,7 @@ class ApplicationController extends Controller
         return response()->json(['success' => true]);
     }
 
-
-
+    // Display the interview information and comments view
     public function step5()
     {
         $user = Auth::user();
@@ -212,6 +216,7 @@ class ApplicationController extends Controller
         return view('application.step5-interview', compact('application', 'comments'));
     }
 
+    // Store the interview information and comments
     public function storeStep5(Request $request)
     {
         try {
@@ -241,6 +246,7 @@ class ApplicationController extends Controller
         }
     }
 
+    // Display the unique job plan view
     public function step6()
     {
         $user = Auth::user();
@@ -250,31 +256,7 @@ class ApplicationController extends Controller
         return view('application.step6-uniqueJobPlan', compact('application', 'comments'));
     }
 
-    // public function storeComment(Request $request)
-    // {
-    //     try {
-    //         $validatedData = $request->validate([
-    //             'comment' => 'required|string|max:1000',
-    //         ]);
-
-    //         $user = Auth::user();
-    //         $application = Application::where('user_id', $user->id)->firstOrFail();
-
-    //         $comment = new Comment();
-    //         $comment->application_id = $application->id;
-    //         $comment->user_id = $user->id;
-    //         $comment->comment = $validatedData['comment'];
-    //         $comment->save();
-
-    //         $comment = $comment->load('user');
-
-    //         return response()->json(['success' => true, 'comment' => $comment]);
-    //     } catch (\Exception $e) {
-    //         Log::error('Error storing comment: ' . $e->getMessage());
-    //         return response()->json(['success' => false, 'message' => 'Failed to add comment.'], 500);
-    //     }
-    // }
-
+    // Store the comments for unique job plan
     public function storeComment(Request $request)
     {
         try {
@@ -291,7 +273,7 @@ class ApplicationController extends Controller
             $comment->comment = $validatedData['comment'];
             $comment->save();
 
-            // Comment 모델에서 user 관계를 통해 user_code를 기반으로 이름과 성을 가져옴
+            // Load the user details for the comment
             $comment = $comment->load([
                 'user' => function ($query) {
                     $query->select('id', 'first_name', 'last_name', 'user_code');
@@ -305,14 +287,15 @@ class ApplicationController extends Controller
         }
     }
 
+    // Display the finish view
     public function step7()
     {
         return view('application.step7-finish');
     }
 
+    // Store the final step data (if any)
     public function storeStep7(Request $request)
     {
-
         return response()->json(['success' => true]);
     }
 }

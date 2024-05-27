@@ -30,6 +30,7 @@
 
             @foreach ($steps as $step => $route)
                         @php
+                            // Determine if the current step is completed or not
                             $isCompleted = ($step == $currentStep) ? 'color: black;' : 'color: #888;';
                             $circleColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : '';
                         @endphp
@@ -44,6 +45,7 @@
                             </a>
                             @if (!$loop->first)
                                         @php
+                                            // Determine the color of the line connecting the steps
                                             $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
                                         @endphp
                                         <div
@@ -53,9 +55,6 @@
                         </div>
             @endforeach
         </div>
-
-
-
     </x-slot>
 
     <div class="py-12">
@@ -63,8 +62,10 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     @if($application)
+                        <!-- Workshop Form -->
                         <form id="workshopForm" action="{{ route('application.storeStep4') }}" method="POST">
                             @csrf
+                            <!-- Workshop Information Input -->
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="workshop_info">
                                     Workshop Information
@@ -75,16 +76,19 @@
                             </div>
 
                             <div class="flex items-center justify-between">
+                                <!-- Check Result Button -->
                                 <button type="button" id="checkResultButton"
                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                     Check Result
                                 </button>
+                                <!-- Next Button -->
                                 <a href="{{ route('application.step5') }}"
                                     class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                     Next
                                 </a>
                             </div>
 
+                            <!-- Workshop Result Input, initially hidden -->
                             <div class="mb-4" id="workshopResultSection" style="display: none;">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="workshop_result">
                                     Workshop Result
@@ -103,15 +107,18 @@
     </div>
 
     <script>
+        // Show the workshop result section when the Check Result button is clicked
         document.getElementById('checkResultButton').addEventListener('click', function () {
             document.getElementById('workshopResultSection').style.display = 'block';
         });
 
+        // Handle the form submission
         document.getElementById('workshopForm').addEventListener('submit', function (event) {
             event.preventDefault();
             const form = event.target;
             const formData = new FormData(form);
 
+            // Submit the form data using Fetch API
             fetch(form.action, {
                 method: 'POST',
                 headers: {

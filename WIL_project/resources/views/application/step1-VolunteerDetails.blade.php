@@ -30,6 +30,7 @@
 
             @foreach ($steps as $step => $route)
                         @php
+                            // Determine if the current step is completed or not
                             $isCompleted = ($step == $currentStep) ? 'color: black;' : 'color: #888;';
                             $circleColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : '';
                         @endphp
@@ -43,24 +44,24 @@
                                 {{ $step }}
                             </a>
                             @if (!$loop->first)
-                                        @php
-                                            $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
-                                        @endphp
-                                        <div
-                                            style="position: absolute; top: -12px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
-                                        </div>
+                                            @php
+                                                // Determine the color of the line connecting the steps
+                                                $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
+                                            @endphp
+                                <div
+                                                style="position: absolute; top: -12px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
+                                            </div>
                             @endif
                         </div>
             @endforeach
         </div>
-
-
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <!-- Volunteer Details Form -->
                     <form id="applicationForm">
                         @csrf
                         <div class="mb-4">
@@ -117,6 +118,7 @@
     </div>
 
     <script>
+        // Event listener for save button
         document.getElementById('saveButton').addEventListener('click', function () {
             const form = document.getElementById('applicationForm');
             const formData = new FormData(form);
@@ -134,6 +136,7 @@
                 }
             }
 
+            // Submit form data to storeStep1 route
             fetch('{{ route('application.storeStep1') }}', {
                 method: 'POST',
                 headers: {
@@ -157,7 +160,7 @@
                 });
         });
 
-
+        // Auto-save form data on change
         document.querySelectorAll('#applicationForm input, #applicationForm textarea, #applicationForm select').forEach(element => {
             element.addEventListener('change', function () {
                 const form = document.getElementById('applicationForm');

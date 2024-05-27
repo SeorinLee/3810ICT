@@ -30,6 +30,7 @@
 
             @foreach ($steps as $step => $route)
                         @php
+                            // Determine if the current step is completed or not
                             $isCompleted = ($step == $currentStep) ? 'color: black;' : 'color: #888;';
                             $circleColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : '';
                         @endphp
@@ -43,18 +44,17 @@
                                 {{ $step }}
                             </a>
                             @if (!$loop->first)
-                                        @php
-                                            $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
-                                        @endphp
-                                        <div
-                                            style="position: absolute; top: -12px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
-                                        </div>
+                                            @php
+                                                // Determine the color of the line connecting the steps
+                                                $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
+                                            @endphp
+                                <div
+                                                style="position: absolute; top: -12px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
+                                            </div>
                             @endif
                         </div>
             @endforeach
         </div>
-
-
     </x-slot>
 
     <div class="py-12">
@@ -62,6 +62,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     @if($application)
+                        <!-- Interview script input -->
                         <div>
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="interview_script">
                                 Interview information
@@ -72,24 +73,29 @@
                         </div>
 
                         <div class="flex items-center justify-between mt-4">
+                            <!-- Button to save and confirm interview script -->
                             <button id="saveButton"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                 Check and Confirm
                             </button>
+                            <!-- Button to navigate to the next step -->
                             <a href="{{ route('application.step6') }}"
                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                 Next
                             </a>
                         </div>
 
+                        <!-- Comments section, initially hidden -->
                         <div id="commentsSection" class="mt-4" style="display: none;">
                             <div class="flex">
                                 <div class="w-1/2 p-2 border-r">
+                                    <!-- Interview finding textarea -->
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="interview_finding">
                                         Interview Session
                                     </label>
                                     <textarea id="interview_finding" name="interview_finding" rows="5"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ $application->interview_finding }}</textarea>
+                                    <!-- Duplicate of Interview Findings label and textarea -->
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="interview_finding">
                                         Interview Findings
                                     </label>
@@ -97,6 +103,7 @@
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ $application->interview_finding }}</textarea>
                                 </div>
                                 <div class="w-1/2 p-2">
+                                    <!-- Add comments section -->
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="interview_comments">
                                         Add Comments
                                     </label>
@@ -117,11 +124,11 @@
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2">
                                         Add Comment
                                     </button>
-
                                 </div>
                             </div>
                         </div>
                     @else
+                        <!-- Message when no application is found -->
                         <p>No application found.</p>
                     @endif
                 </div>
@@ -130,10 +137,12 @@
     </div>
 
     <script>
+        // Event listener for save button
         document.getElementById('saveButton').addEventListener('click', function () {
             const interviewScript = document.getElementById('interview_script').value;
             const interviewFinding = document.getElementById('interview_finding').value;
 
+            // Submit interview script and findings to storeStep5 route
             fetch('{{ route('application.storeStep5') }}', {
                 method: 'POST',
                 headers: {
@@ -160,9 +169,11 @@
                 });
         });
 
+        // Event listener for add comment button
         document.getElementById('addCommentButton').addEventListener('click', function () {
             const interviewComments = document.getElementById('interview_comments').value;
 
+            // Submit comment to storeStep5 route
             fetch('{{ route('application.storeStep5') }}', {
                 method: 'POST',
                 headers: {
@@ -180,7 +191,9 @@
                         const newComment = document.createElement('div');
                         newComment.classList.add('mb-2');
                         newComment.innerHTML = `
-                            <strong>${data.comment.user.name}:</strong> ${data.comment.comment}
+                            <strong>${data.comment.user.first_name}:</strong> ${data.comment.comment}
+                            <br>
+                            <small>[${new Date(data.comment.created_at).toLocaleString()}]</small>
                         `;
                         commentsChat.appendChild(newComment);
                         document.getElementById('interview_comments').value = '';

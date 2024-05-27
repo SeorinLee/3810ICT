@@ -30,6 +30,7 @@
 
             @foreach ($steps as $step => $route)
                         @php
+                            // Determine if the current step is completed or not
                             $isCompleted = ($step == $currentStep) ? 'color: black;' : 'color: #888;';
                             $circleColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : '';
                         @endphp
@@ -43,12 +44,13 @@
                                 {{ $step }}
                             </a>
                             @if (!$loop->first)
-                                        @php
-                                            $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
-                                        @endphp
-                                        <div
-                                            style="position: absolute; top: -12px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
-                                        </div>
+                                            @php
+                                                // Determine the color of the line connecting the steps
+                                                $lineColor = ($step == $currentStep) ? 'background-color: dodgerblue;' : 'background-color: black;';
+                                            @endphp
+                                <div
+                                                style="position: absolute; top: -12px; left: 0%; width: 80%; transform: translateX(-50%); height: 2px; {{ $lineColor }}">
+                                            </div>
                             @endif
                         </div>
             @endforeach
@@ -61,6 +63,7 @@
                 <div class="p-6 text-gray-900">
                     @if($application)
                         <div class="flex flex-wrap -mx-4">
+                            <!-- Unique Job Plan section -->
                             <div class="w-full md:w-2/3 px-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-4" for="unique_job_plan">
                                     Unique Job Plan
@@ -72,6 +75,7 @@
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     required>{{ $application->unique_job_plan }}</textarea>
                             </div>
+                            <!-- Feedback section -->
                             <div class="w-full md:w-1/3 px-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="comment">
                                     Feedback
@@ -81,8 +85,7 @@
                                     @foreach ($comments as $comment)
                                         <div class="comment mb-2">
                                             <div><strong>{{ $comment->user->first_name ?? 'Unknown User' }}</strong>:
-                                                {{ $comment->comment }}
-                                            </div>
+                                                {{ $comment->comment }}</div>
                                             <small>{{ $comment->created_at->format('Y-m-d H:i') }}</small>
                                         </div>
                                     @endforeach
@@ -91,6 +94,7 @@
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     placeholder="Type your comment here..." required></textarea>
                                 <div class="text-right mt-2">
+                                    <!-- Button to add a comment -->
                                     <button id="addCommentButton"
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                         Add Comment
@@ -99,6 +103,7 @@
                             </div>
                         </div>
 
+                        <!-- Confirmation and Next buttons -->
                         <div class="flex items-center justify-between mt-4">
                             <div class="flex items-center space-x-4">
                                 <button id="confirmButton"
@@ -112,6 +117,7 @@
                             </div>
                         </div>
                     @else
+                        <!-- Message when no application is found -->
                         <p>No application found.</p>
                     @endif
                 </div>
@@ -120,9 +126,11 @@
     </div>
 
     <script>
+        // Event listener for confirm button
         document.getElementById('confirmButton').addEventListener('click', function () {
             const uniqueJobPlan = document.getElementById('unique_job_plan').value;
 
+            // Submit unique job plan to storeStep6 route
             fetch('{{ route('application.storeStep6') }}', {
                 method: 'POST',
                 headers: {
@@ -147,9 +155,11 @@
                 });
         });
 
+        // Event listener for add comment button
         document.getElementById('addCommentButton').addEventListener('click', function () {
             const comment = document.getElementById('comment').value;
 
+            // Submit comment to storeComment route
             fetch('{{ route('application.storeComment') }}', {
                 method: 'POST',
                 headers: {
@@ -166,7 +176,7 @@
                         const commentsSection = document.getElementById('comments-section');
                         const newComment = document.createElement('div');
                         newComment.classList.add('comment', 'mb-2');
-                        newComment.innerHTML = `<div><strong>${data.comment.user ? data.comment.user.name : 'Unknown User'}</strong>: ${data.comment.comment}</div><small>${new Date(data.comment.created_at).toLocaleString()}</small>`;
+                        newComment.innerHTML = `<div><strong>${data.comment.user ? data.comment.user.first_name : 'Unknown User'}</strong>: ${data.comment.comment}</div><small>${new Date(data.comment.created_at).toLocaleString()}</small>`;
                         commentsSection.appendChild(newComment);
                         document.getElementById('comment').value = '';
                     } else {
